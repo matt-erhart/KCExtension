@@ -13,11 +13,21 @@
     "128": "img/icon-128.png"
   },
   "web_accessible_resources": [
-    "inject.html"
   ],
   "background": {
-    "page": "background.html"
+    "page": "background.html",
+    "persistent": true
   },
-  "permissions": [ "contextMenus", "tabs", "storage", "https://github.com/*" ],
+    "commands": {
+          "screenshot": {
+            "suggested_key": {
+              "default": "Alt+S",
+              "mac": "Command+S"
+            },
+            "description": "Toggle feature foo"
+          }
+        },
+  "permissions": [ "contextMenus", "management", "tabs", "storage", "<all_urls>", "https://*/*", "http://*/*", "background" ],
   "content_security_policy": "default-src 'self'; script-src 'self'; style-src * 'unsafe-inline'; img-src 'self' data:;"
+
 }

@@ -10,9 +10,10 @@ class InjectApp extends Component {
     display: 'none' }
   }
 
+
   componentDidMount() {
     let body = document.getElementsByTagName("body")[0];
-    // const keyUp$ = Rx.Observable.fromEvent(document, 'keyup').filter(key=>key.altKey).map(key=>key.key);
+    const keyUp$ = Rx.Observable.fromEvent(document, 'keyup').filter(key=>key.altKey).map(key=>key.key);
     const altS$ = keyUp$.filter(key => key === 's').do(x=> body.style.cursor = 'crosshair')
     const mouseDown$ = Rx.Observable.fromEvent(document, 'mousedown')
     const mouseUp$ = Rx.Observable.fromEvent(document,   'mouseup')
@@ -44,7 +45,7 @@ class InjectApp extends Component {
           });
         })
     })
-    Rx.Observable.concat(dragSelect$).take(1).subscribe()
+    Rx.Observable.concat(altS$.take(1), dragSelect$ ).repeat().subscribe()
   }
 
   render() {
@@ -59,12 +60,19 @@ class InjectApp extends Component {
   }
 }
 
-// window.addEventListener('load', () => {
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log('inject',request)
+    if (request.greeting == "hello")
+      sendResponse('he1y');
+  });
+
+window.addEventListener('load', () => {
   const injectDOM = document.createElement('div');
   injectDOM.className = 'inject-react-example';
   injectDOM.style.textAlign = 'center';
   document.body.appendChild(injectDOM);
   render(<InjectApp />, injectDOM);
-// });
+});
 
-console.log('injected')
+console.log('hey12')

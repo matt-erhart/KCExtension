@@ -82,7 +82,7 @@ injectPageConfig.output = {
 };
 const appConfig = baseDevConfig();
 
+// injectPageConfig,
 module.exports = [
-  injectPageConfig,
   appConfig
 ];

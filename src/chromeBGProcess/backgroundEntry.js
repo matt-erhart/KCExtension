@@ -30,3 +30,4 @@ promisifyAll(chrome.storage, [
 
 require('./contextMenus');
 require('./injectFromBGEntry');
+require('./commands');

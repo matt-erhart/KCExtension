@@ -64,6 +64,13 @@ chrome.contextMenus.create({
   }
 });
 
-// chrome.commands.onCommand.addListener(function(command) {
-//   console.log('onCommand event received for message: ', command);
-// });
+chrome.commands.onCommand.addListener(function(command) {
+    chrome.tabs.executeScript( {
+    code: "window.getSelection().toString();"
+  }, function(selection) {
+      chrome.tabs.executeScript( {
+        file: '../injectedWebsiteContent/inject.js'
+       } )
+      // popWindow('open', selection[0]);
+  });
+});
