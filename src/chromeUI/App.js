@@ -154,6 +154,7 @@ handleSubmit(e) {
     ref.putString(message, 'data_url').then(function(snapshot) {
         console.log('file uploaded')
     });
+    console.log(this.state.comment)
     firebase.database().ref('/snippets').push({
         snippet: this.state.snippet,
         imgPath: storagePath,
@@ -172,10 +173,10 @@ handleSubmit(e) {
     return (
       <div>
         <CanvasComponent ref={component => this.canvasComp = component} img={this.state.img}></CanvasComponent>
-        <input value={this.state.title} onChange={e=>{this.setState({title: e.value})}}/> <br/>
-        <input value={this.state.url} onChange={e=>{this.setState({url: e.value})}}/>
-        <textarea name="" id="" cols="60" rows="10" placeholder='comment' value={this.state.comment} onChange={e=>{this.setState({comment: e.value})}}></textarea> <br/>
-        <textarea name="" id="" cols="60" rows="10" placeholder='snippet' value={this.state.snippet} onChange={e=>{this.setState({snippet: e.value})}}></textarea> <br/>
+        <input value={this.state.title} onChange={e=>{this.setState({title: e.target.value})}}/> <br/>
+        <input value={this.state.url} onChange={e=>{this.setState({url: e.target.value})}}/>
+        <textarea name="" id="" cols="60" rows="10" placeholder='comment' value={this.state.comment} onChange={e=>{console.log(e.target.value); this.setState({comment: e.target.value})}}></textarea> <br/>
+        <textarea name="" id="" cols="60" rows="10" placeholder='snippet' value={this.state.snippet} onChange={e=>{this.setState({snippet: e.target.value})}}></textarea> <br/>
         <button onClick={e => this.handleSubmit(e)}>Submit</button>
       </div>
 
