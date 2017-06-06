@@ -10,7 +10,10 @@ var config = {
     messagingSenderId: "441463277516"
   };
 var fire = firebase.initializeApp(config);
-console.log(fire)
+var storageRef = firebase.storage().ref();
+import uid from 'uid-safe'
+import moment from 'moment';
+
 
 const resizeCenterAspect = (img, canvas ) => {
     var hRatio = canvas.width / img.width;
@@ -121,7 +124,8 @@ export default class Root extends Component {
     this.state = {
       url: '...',
       title: '...',
-      snippet: '',
+      snippet: '...',
+      comment: '...',
       img: null
     };
   }
@@ -143,7 +147,22 @@ export default class Root extends Component {
 }
 
 handleSubmit(e) {
-    console.log(this.canvasComp.refs.canvas.toDataURL("image/png"))
+    const id = uid.sync(18);
+    const storagePath = '/images/'+ id +'.png';
+    const ref = storageRef.child(storagePath)
+    const message = this.canvasComp.refs.canvas.toDataURL("image/png");
+    ref.putString(message, 'data_url').then(function(snapshot) {
+        console.log('file uploaded')
+    });
+    firebase.database().ref('/snippets').push({
+        snippet: this.state.snippet,
+        imgPath: storagePath,
+        title: this.state.title,
+        url: this.state.url,
+        comment: this.state.comment,
+        created: moment().format('MMMM Do YYYY, h:mm:ss a')
+    })
+
 
 }
 
@@ -155,9 +174,9 @@ handleSubmit(e) {
         <CanvasComponent ref={component => this.canvasComp = component} img={this.state.img}></CanvasComponent>
         <input value={this.state.title} onChange={e=>{this.setState({title: e.value})}}/> <br/>
         <input value={this.state.url} onChange={e=>{this.setState({url: e.value})}}/>
-        <textarea name="" id="" cols="60" rows="10" placeholder='remark'></textarea> <br/>
+        <textarea name="" id="" cols="60" rows="10" placeholder='comment' value={this.state.comment} onChange={e=>{this.setState({comment: e.value})}}></textarea> <br/>
         <textarea name="" id="" cols="60" rows="10" placeholder='snippet' value={this.state.snippet} onChange={e=>{this.setState({snippet: e.value})}}></textarea> <br/>
-        <button onClick={e => handleSubmit(e)}>Submit</button>
+        <button onClick={e => this.handleSubmit(e)}>Submit</button>
       </div>
 
     )
