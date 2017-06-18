@@ -126,7 +126,8 @@ export default class Root extends Component {
       title: '...',
       snippet: '...',
       comment: '...',
-      img: null
+      img: null,
+      uploading: false,
     };
   }
 
@@ -151,8 +152,11 @@ handleSubmit(e) {
     const storagePath = '/images/'+ id +'.png';
     const ref = storageRef.child(storagePath)
     const message = this.canvasComp.refs.canvas.toDataURL("image/png");
-    ref.putString(message, 'data_url').then(function(snapshot) {
-        console.log('file uploaded')
+    this.setState({uploading: true})
+    ref.putString(message, 'data_url').then((snapshot) => {
+        this.setState({uploading: false})
+        window.close()
+
     });
     console.log(this.state.comment)
     firebase.database().ref('/snippets').push({
@@ -177,7 +181,7 @@ handleSubmit(e) {
         <input value={this.state.url} onChange={e=>{this.setState({url: e.target.value})}}/>
         <textarea name="" id="" cols="60" rows="10" placeholder='comment' value={this.state.comment} onChange={e=>{console.log(e.target.value); this.setState({comment: e.target.value})}}></textarea> <br/>
         <textarea name="" id="" cols="60" rows="10" placeholder='snippet' value={this.state.snippet} onChange={e=>{this.setState({snippet: e.target.value})}}></textarea> <br/>
-        <button onClick={e => this.handleSubmit(e)}>Submit</button>
+        <button onClick={e => this.handleSubmit(e)}>Submit</button> {this.state.uploading && <span>Uploading image. Will auto close when finished.</span>}
       </div>
 
     )
