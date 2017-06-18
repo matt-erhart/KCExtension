@@ -14,6 +14,8 @@ const baseDevConfig = () => ({
   entry: {
     app: [customPath, hotScript, path.join(__dirname, paths.app.path)],
     background: [customPath, hotScript, path.join(__dirname, paths.backgroundjs.path)],
+    chromeButtonPopup: [customPath, hotScript, path.join(__dirname, paths.chromeButtonPopup.path)],
+    inject: [customPath, hotScript, path.join(__dirname, paths.injectedContent.path)],
   },
   devMiddleware: {
     publicPath: `http://${host}:${port}/js`,

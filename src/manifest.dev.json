@@ -1,11 +1,11 @@
 {
   "version": "0.0.0",
-  "name": "react-chrome-extension-example",
+  "name": "Knowledge Collector",
   "manifest_version": 2,
-  "description": "Example for react-chrome-extension-boilerplate",
+  "description": "To collect snippets with cropped screenshots and and selected text",
   "browser_action": {
-    "default_title": "React Chrome Extension Example",
-    "default_popup": "popup.html"
+    "default_title": "Knowledge Collector",
+    "default_popup": "chromeButtonPopup.html"
   },
   "icons": {
     "16": "img/icon-16.png",
@@ -13,7 +13,7 @@
     "128": "img/icon-128.png"
   },
   "web_accessible_resources": [
-    
+    "inject.html"
   ],
   "background": {
     "page": "background.html",

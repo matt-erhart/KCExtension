@@ -15,6 +15,11 @@ module.exports = {
         description: 'chrome UI javascript',
         usedIn: 'webpack/dev.config.js'
     },
+    chromeButtonPopup: {
+        path: '../src/chromeUI/chromeButtonPopup',
+        description: 'UI from top right button click',
+        usedIn: 'webpack/dev.config.js'
+    },
     injectedContent: {
         path: '../src/injectedWebsiteContent/inject',
         description: 'code to injected into websites',
