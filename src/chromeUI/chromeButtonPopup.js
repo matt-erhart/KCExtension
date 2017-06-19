@@ -7,8 +7,8 @@ class App extends React.Component {
   };
   componentWillMount() {
     chrome.storage.local.get("currentGoal", goal => {
-        if (goal) this.setState({ currentGoal: goal.currentGoal });
-     })
+      if (goal) this.setState({ currentGoal: goal.currentGoal });
+    });
   }
   render() {
     return (
@@ -23,7 +23,7 @@ class App extends React.Component {
             chrome.storage.local.set(
               { currentGoal: e.nativeEvent.srcElement.value },
               function() {
-                console.log('saved')
+                console.log("saved");
               }
             );
           }}
