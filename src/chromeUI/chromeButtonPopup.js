@@ -1,33 +1,49 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import * as _ from "lodash";
+const Input = ({ value, handleChange, stateVarName }) => {
+  return (
+    <textarea
+      id="textarea"
+      style={{ width: "450px", height: "50px" }}
+      value={value}
+      onChange={handleChange}
+      placeholder={stateVarName}
+    />
+  );
+};
 
 class App extends React.Component {
   state = {
-    currentGoal: ""
+    user: "",
+    project: "",
+    purpose: ""
   };
+
+  handleChange = (e, stateVarName) => {
+    this.setState({ [stateVarName]: e.nativeEvent.srcElement.value });
+    chrome.storage.local.set(
+      { [stateVarName]: e.nativeEvent.srcElement.value },
+      function() {
+        console.log(stateVarName);
+      }
+    );
+  };
+
   componentWillMount() {
-    chrome.storage.local.get("currentGoal", goal => {
-      if (goal) this.setState({ currentGoal: goal.currentGoal });
+    _.map(this.state, (val, key) => {
+      chrome.storage.local.get(key, storedVar => {
+        if (storedVar) this.setState({ [key]: storedVar[key] });
+      });
     });
   }
   render() {
     return (
       <div>
-        <label htmlFor="textarea">What's your main goal?</label>
-        <textarea
-          id="textarea"
-          style={{ width: "450px", height: "50px" }}
-          value={this.state.currentGoal}
-          onChange={e => {
-            this.setState({ currentGoal: e.nativeEvent.srcElement.value });
-            chrome.storage.local.set(
-              { currentGoal: e.nativeEvent.srcElement.value },
-              function() {
-                console.log("saved");
-              }
-            );
-          }}
-        />
+        {_.map(this.state, (val, key) => {
+          return <Input key={key} value={val} handleChange={e => this.handleChange(e,key)} stateVarName={key}/>
+        })}
+        
       </div>
     );
   }

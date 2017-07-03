@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import Rx from "rxjs";
 import * as firebase from "firebase";
+import * as _ from "lodash";
 var config = {
   apiKey: "AIzaSyDOBWE5a-0bO8k_hBbfJjXlr2dfRAMfkK4",
   authDomain: "knowledgecollector-20674.firebaseapp.com",
@@ -166,6 +167,33 @@ class CanvasComponent extends React.Component {
   }
 }
 
+
+ const Input = ({label, value, handleChange}) => {
+    return (
+      <span style={{ display: "flex", width: "50vw" }}>
+        <label>{label}: </label>
+        <input
+          style={{ width: "100%", marginLeft: "5px" }}
+          value={value}
+          onChange={handleChange}
+        />
+      </span>
+    );
+  };
+  const Textarea = ({label, value, handleChange}) => {
+    return (
+      <textarea
+          style={{ width: "50vw" }}
+          name=""
+          id=""
+          rows="10"
+          placeholder={label}
+          value={value}
+          onChange={handleChange}
+        />
+    )
+  }
+
 export default class Root extends Component {
   constructor(props) {
     super(props);
@@ -174,15 +202,19 @@ export default class Root extends Component {
       title: "...",
       snippet: "...",
       comment: "",
-      currentGoal: "",
+      purpose: "",
+      user: "",
+      project: "",
       img: null,
       uploading: false
     };
   }
 
   componentWillMount() {
-    chrome.storage.local.get("currentGoal", goal => {
-      if (goal) this.setState({ currentGoal: goal.currentGoal });
+    _.map(["user", "purpose", "project"], key => {
+      chrome.storage.local.get(key, storedVar => {
+        if (storedVar) this.setState({ [key]: storedVar[key] });
+      });
     });
   }
 
@@ -223,6 +255,7 @@ export default class Root extends Component {
       this.setState({ uploading: false });
       window.close();
     });
+
     console.log(this.state.comment);
     firebase.database().ref("/snippets").push({
       snippet: this.state.snippet,
@@ -231,9 +264,17 @@ export default class Root extends Component {
       url: this.state.url,
       comment: this.state.comment,
       created: moment().format("MMMM Do YYYY, h:mm:ss a"),
-      goal: this.state.currentGoal
+      purpose: this.state.purpose,
+      project: this.state.project,
+      user: this.state.user,
     });
   }
+
+  handleChange = (e, key) => {
+    this.setState({[key]: e.nativeEvent.srcElement.value})
+  }
+
+
 
   render() {
     const { store } = this.props;
@@ -243,61 +284,12 @@ export default class Root extends Component {
           ref={component => (this.canvasComp = component)}
           img={this.state.img}
         />
-        <span style={{ display: "flex", width: "50vw" }}>
-          <label>goal: </label>
-          <input
-            style={{ width: "100%", marginLeft: "5px" }}
-            value={this.state.currentGoal}
-            onChange={e => {
-              this.setState({ currentGoal: e.target.value });
-            }}
-          />
-        </span>
-        <span style={{ display: "flex", width: "50vw" }}>
-          <label>title: </label>
-          <input
-            style={{ width: "100%", marginLeft: "5px" }}
-            value={this.state.title}
-            onChange={e => {
-              this.setState({ title: e.target.value });
-            }}
-          />
-        </span>
-        <span style={{ display: "flex", width: "50vw" }}>
-          <label>url: </label>
-          <input
-            style={{ width: "100%", marginLeft: "5px" }}
-            value={this.state.url}
-            onChange={e => {
-              this.setState({ url: e.target.value });
-            }}
-          />
-        </span>
-        <textarea
-          ref="comment"
-          style={{ width: "50vw" }}
-          name=""
-          id=""
-          rows="10"
-          placeholder="comment"
-          value={this.state.comment}
-          onChange={e => {
-            console.log(e.target.value);
-            this.setState({ comment: e.target.value });
-          }}
-        />{" "}
-        <br />
-        <textarea
-          style={{ width: "50vw" }}
-          name=""
-          id=""
-          rows="10"
-          placeholder="snippet"
-          value={this.state.snippet}
-          onChange={e => {
-            this.setState({ snippet: e.target.value });
-          }}
-        />{" "}
+        {_.map(['user', 'project', 'purpose', 'title', 'url'], key => {
+          return <Input key={key} label={key} value={this.state[key] || ''} handleChange={e => handleChange(e,key)} />
+        })}
+        {_.map(['comment', 'snippet'], key => {
+          return <Textarea key={key} label={key} value={this.state[key]||''} handleChange={e=>handleChange(e,key)} />
+        })}
         <br />
         <button onClick={e => this.handleSubmit(e)}>Submit</button>{" "}
         {this.state.uploading &&
