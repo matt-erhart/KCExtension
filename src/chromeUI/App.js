@@ -167,32 +167,33 @@ class CanvasComponent extends React.Component {
   }
 }
 
-
- const Input = ({label, value, handleChange}) => {
-    return (
-      <span style={{ display: "flex", width: "50vw" }}>
-        <label>{label}: </label>
-        <input
-          style={{ width: "100%", marginLeft: "5px" }}
-          value={value}
-          onChange={handleChange}
-        />
-      </span>
-    );
-  };
-  const Textarea = ({label, value, handleChange}) => {
-    return (
-      <textarea
-          style={{ width: "50vw" }}
-          name=""
-          id=""
-          rows="10"
-          placeholder={label}
-          value={value}
-          onChange={handleChange}
-        />
-    )
-  }
+const Input = ({ label, value, handleChange }) => {
+  return (
+    <span style={{ display: "flex", width: "50vw" }}>
+      <label>
+        {label}:{" "}
+      </label>
+      <input
+        style={{ width: "100%", marginLeft: "5px" }}
+        value={value}
+        onChange={handleChange}
+      />
+    </span>
+  );
+};
+const Textarea = ({ label, value, handleChange }) => {
+  return (
+    <textarea
+      style={{ width: "50vw" }}
+      name=""
+      id=""
+      rows="10"
+      placeholder={label}
+      value={value}
+      onChange={handleChange}
+    />
+  );
+};
 
 export default class Root extends Component {
   constructor(props) {
@@ -266,15 +267,14 @@ export default class Root extends Component {
       created: moment().format("MMMM Do YYYY, h:mm:ss a"),
       purpose: this.state.purpose,
       project: this.state.project,
-      user: this.state.user,
+      user: this.state.user
     });
   }
 
   handleChange = (e, key) => {
-    this.setState({[key]: e.nativeEvent.srcElement.value})
-  }
-
-
+    console.log(e.nativeEvent.srcElement.value, key)
+    this.setState({ [key]: e.nativeEvent.srcElement.value });
+  };
 
   render() {
     const { store } = this.props;
@@ -284,11 +284,25 @@ export default class Root extends Component {
           ref={component => (this.canvasComp = component)}
           img={this.state.img}
         />
-        {_.map(['user', 'project', 'purpose', 'title', 'url'], key => {
-          return <Input key={key} label={key} value={this.state[key] || ''} handleChange={e => handleChange(e,key)} />
+        {_.map(["user", "project", "purpose", "title", "url"], key => {
+          return (
+            <Input
+              key={key}
+              label={key}
+              value={this.state[key] || ""}
+              handleChange={e => this.handleChange(e, key)}
+            />
+          );
         })}
-        {_.map(['comment', 'snippet'], key => {
-          return <Textarea key={key} label={key} value={this.state[key]||''} handleChange={e=>handleChange(e,key)} />
+        {_.map(["comment", "snippet"], key => {
+          return (
+            <Textarea
+              key={key}
+              label={key}
+              value={this.state[key] || ""}
+              handleChange={e => this.handleChange(e, key)}
+            />
+          );
         })}
         <br />
         <button onClick={e => this.handleSubmit(e)}>Submit</button>{" "}
