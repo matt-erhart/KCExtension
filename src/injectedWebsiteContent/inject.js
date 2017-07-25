@@ -66,23 +66,23 @@
 //   render(<InjectApp />, injectDOM);
 // });
 
-window.addEventListener("load", () => {
-  console.log("window loaded and injected");
-  const injectDOM = document.createElement("div");
-  injectDOM.style.position = "fixed";
+// window.addEventListener("load", () => {
+//   console.log("window loaded and injected");
+//   const injectDOM = document.createElement("div");
+//   injectDOM.style.position = "fixed";
 
-  chrome.storage.local.get("currentGoal", goal => {
-    if (goal) {
-      injectDOM.innerHTML = goal.currentGoal;
-    } else {
-      injectDOM.innerHTML = "";
-    }
-    injectDOM.style.bottom = 0;
-    injectDOM.style.right = 0;
-    document.body.appendChild(injectDOM);
-    chrome.storage.onChanged.addListener(function(changes, areaName) {
-      injectDOM.innerHTML = changes.currentGoal.newValue;
-      console.log("got a change");
-    });
-  });
-});
+//   chrome.storage.local.get("currentGoal", goal => {
+//     if (goal) {
+//       injectDOM.innerHTML = goal.currentGoal;
+//     } else {
+//       injectDOM.innerHTML = "";
+//     }
+//     injectDOM.style.bottom = 0;
+//     injectDOM.style.right = 0;
+//     document.body.appendChild(injectDOM);
+//     chrome.storage.onChanged.addListener(function(changes, areaName) {
+//       injectDOM.innerHTML = changes.currentGoal.newValue;
+//       console.log("got a change");
+//     });
+//   });
+// });

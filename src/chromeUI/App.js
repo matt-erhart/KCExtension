@@ -10,6 +10,7 @@ var config = {
   storageBucket: "knowledgecollector-20674.appspot.com",
   messagingSenderId: "441463277516"
 };
+
 var fire = firebase.initializeApp(config);
 var storageRef = firebase.storage().ref();
 import uid from "uid-safe";
