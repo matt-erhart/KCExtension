@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import * as _ from "lodash";
+import {popWindow} from '../chromeBGProcess/contextMenus'
 const Input = ({ value, handleChange, stateVarName }) => {
   return (
     <textarea
@@ -41,7 +42,7 @@ class App extends React.Component {
     return (
 
       <div>
-        
+        <button onClick={e=>{popWindow('open','')}}>Create Snippet</button>
         {_.map(this.state, (val, key) => {
           return <Input key={key} value={val} handleChange={e => this.handleChange(e,key)} stateVarName={key}/>
         })}

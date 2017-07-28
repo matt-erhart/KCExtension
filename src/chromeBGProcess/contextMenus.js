@@ -14,7 +14,7 @@ function closeIfExist() {
   }
 }
 
-function popWindow(type, selectedText) {
+export function popWindow(type, selectedText) {
   text = selectedText;
   closeIfExist();
 
@@ -56,7 +56,7 @@ chrome.contextMenus.create(
     id: "selected text",
     title: "Create snippet: %s",
     contexts: ["selection", "page"],
-    documentUrlPatterns: ["https://*/*", "http://*/*", "<all_urls>"],
+    documentUrlPatterns: ["https://*/*", "http://*/*", "<all_urls>", "*://*/*.pdf"],
     onclick: function(info, tab) {
       popWindow("open", info.selectionText || '');
     }
