@@ -28,7 +28,7 @@ const Input = ({ value, handleChange, stateVarName }) => {
       id="textarea"
       value={value}
       onChange={handleChange}
-      floatingLabelText={stateVarName}
+      floatingLabelText={stateVarName !== 'feedback' ? stateVarName:''}
       floatingLabelFixed={true}
       floatingLabelStyle={{ color: color }}
       floatingLabelFocusStyle={{ color: color }}
