@@ -39,7 +39,9 @@ class App extends React.Component {
   }
   render() {
     return (
+
       <div>
+        
         {_.map(this.state, (val, key) => {
           return <Input key={key} value={val} handleChange={e => this.handleChange(e,key)} stateVarName={key}/>
         })}

@@ -1,8 +1,8 @@
 {
-  "version": "0.0.0",
+  "version": "0.0.1",
   "name": "Knowledge Collector",
   "manifest_version": 2,
-  "description": "To collect snippets with cropped screenshots and and selected text",
+  "description": "To collect snippets with cropped screenshots and selected text",
   "browser_action": {
     "default_title": "Knowledge Collector",
     "default_popup": "chromeButtonPopup.html"
@@ -25,7 +25,7 @@
               "default": "Alt+S",
               "mac": "Command+S"
             },
-            "description": "Toggle feature foo"
+            "description": "Toggle"
           }
         },
   "permissions": [ "contextMenus", "management", "tabs", "storage", "<all_urls>", "https://*/*", "http://*/*", "background" ],

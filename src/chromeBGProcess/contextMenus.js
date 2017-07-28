@@ -54,11 +54,11 @@ function popWindow(type, selectedText) {
 chrome.contextMenus.create(
   {
     id: "selected text",
-    title: "Create snippet from %s",
-    contexts: ["selection"],
+    title: "Create snippet: %s",
+    contexts: ["selection", "page"],
     documentUrlPatterns: ["https://*/*", "http://*/*", "<all_urls>"],
     onclick: function(info, tab) {
-      popWindow("open", info.selectionText);
+      popWindow("open", info.selectionText || '');
     }
   },
   () => {
