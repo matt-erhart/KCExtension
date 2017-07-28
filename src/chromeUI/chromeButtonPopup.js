@@ -1,15 +1,40 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import * as _ from "lodash";
-import {popWindow} from '../chromeBGProcess/contextMenus'
+import * as firebase from "firebase";
+
+import { popWindow } from "../chromeBGProcess/contextMenus";
+import injectTapEventPlugin from "react-tap-event-plugin";
+injectTapEventPlugin();
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import RaisedButton from "material-ui/RaisedButton";
+import TextField from "material-ui/TextField";
+import { blue500, green400 } from "material-ui/styles/colors";
+import Divider from "material-ui/Divider";
+import { dbRef } from "./App";
+import {
+  Card,
+  CardActions,
+  CardHeader,
+  CardMedia,
+  CardTitle,
+  CardText
+} from "material-ui/Card";
+
 const Input = ({ value, handleChange, stateVarName }) => {
+  const color = stateVarName === "feedback" ? blue500 : green400;
   return (
-    <textarea
+    <TextField
       id="textarea"
-      style={{ width: "450px", height: "50px" }}
       value={value}
       onChange={handleChange}
-      placeholder={stateVarName}
+      floatingLabelText={stateVarName}
+      floatingLabelFixed={true}
+      floatingLabelStyle={{ color: color }}
+      floatingLabelFocusStyle={{ color: color }}
+      underlineFocusStyle={{ borderColor: color }}
+      multiLine={true}
+      fullWidth={true}
     />
   );
 };
@@ -18,7 +43,9 @@ class App extends React.Component {
   state = {
     user: "",
     project: "",
-    purpose: ""
+    purpose: "",
+    feedback: "",
+    feedbackSent: false,
   };
 
   handleChange = (e, stateVarName) => {
@@ -39,21 +66,67 @@ class App extends React.Component {
     });
   }
   render() {
+    const { feedback, feedbackSent, ...inputs } = this.state;
     return (
-
       <div>
-        <button onClick={e=>{popWindow('open','')}}>Create Snippet</button>
-        {_.map(this.state, (val, key) => {
-          return <Input key={key} value={val} handleChange={e => this.handleChange(e,key)} stateVarName={key}/>
-        })}
-        
+        <RaisedButton
+          backgroundColor={green400}
+          onClick={e => {
+            popWindow("open", "");
+          }}
+          fullWidth={true}
+        >
+          Create Snippet
+        </RaisedButton>
+
+        <div>
+          {_.map(inputs, (val, key) => {
+            return (
+              <Input
+                key={key}
+                value={val}
+                handleChange={e => this.handleChange(e, key)}
+                stateVarName={key}
+              />
+            );
+          })}
+        </div>
+        <Card>
+          <CardHeader title="Feedback" actAsExpander={true}
+      showExpandableButton={true}/>
+      <CardText expandable={true}>
+          <Input
+            key={"feedback"}
+            value={feedback}
+            handleChange={e => this.handleChange(e, "feedback")}
+            stateVarName={"feedback"}
+          />
+          <RaisedButton
+            backgroundColor={blue500}
+            onClick={e => {
+              if (this.state.feedback)
+                dbRef.child("feedback").push({feedback: this.state.feedback, from: 'chrome_ext', user: this.state.user || '', created: Date.now().toString()});
+              this.setState({ feedback: "", feedbackSent: true });
+            }}
+            fullWidth={true}
+          >
+            Send Us Feedback
+          </RaisedButton>
+          {this.state.feedbackSent && <div>Feedback sent</div>}
+          </CardText>
+        </Card>
       </div>
     );
   }
 }
 
 chrome.storage.local.get("state", obj => {
-  ReactDOM.render(<App />, document.querySelector("#root"));
+  ReactDOM.render(
+    <MuiThemeProvider>
+      <App />
+    </MuiThemeProvider>,
+    document.querySelector("#root")
+  );
 });
 
 // const { state } = obj;

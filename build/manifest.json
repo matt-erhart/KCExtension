@@ -1,10 +1,10 @@
 {
-  "version": "0.0.1",
-  "name": "Knowledge Collector",
+  "version": "0.0.2",
+  "name": "Knowledge Collector 2",
   "manifest_version": 2,
   "description": "To collect snippets with cropped screenshots and selected text",
   "browser_action": {
-    "default_title": "Knowledge Collector",
+    "default_title": "Knowledge Collector 2",
     "default_popup": "chromeButtonPopup.html"
   },
   "icons": {

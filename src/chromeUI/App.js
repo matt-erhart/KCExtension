@@ -13,6 +13,7 @@ var config = {
 
 var fire = firebase.initializeApp(config);
 var storageRef = firebase.storage().ref();
+export var dbRef = firebase.database().ref();
 import uid from "uid-safe";
 import moment from "moment";
 
