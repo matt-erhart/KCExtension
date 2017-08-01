@@ -17,6 +17,19 @@ export var dbRef = firebase.database().ref();
 import uid from "uid-safe";
 import moment from "moment";
 
+import RaisedButton from "material-ui/RaisedButton";
+import TextField from "material-ui/TextField";
+import { blue500, green400 } from "material-ui/styles/colors";
+import Divider from "material-ui/Divider";
+import {
+  Card,
+  CardActions,
+  CardHeader,
+  CardMedia,
+  CardTitle,
+  CardText
+} from "material-ui/Card";
+
 const resizeCenterAspect = (img, canvas) => {
   var hRatio = canvas.width / img.width;
   var vRatio = canvas.height / img.height;
@@ -45,7 +58,6 @@ class CanvasComponent extends React.Component {
       img.onload = () => {
         if (this.state.canvasHeight === 1)
           this.setState({ canvasHeight: img.height, canvasWidth: img.width });
-        //   const {centerShift_x, centerShift_y, ratio} = resizeCenterAspect(img, canvas);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         if (this.state.crop && this.state.dragSelect.x !== null) {
           const { x, y, width, height } = this.state.dragSelect;
@@ -53,8 +65,6 @@ class CanvasComponent extends React.Component {
           var vRatio = ctx.canvas.height / img.height;
           var ratio = Math.min(hRatio, vRatio);
           ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
-          // ctx.drawImage(img, 0, 0, img.width, img.height,
-          // 0, 0, img.width, img.height);
         }
         if (!this.state.crop) {
           ctx.drawImage(
@@ -68,9 +78,7 @@ class CanvasComponent extends React.Component {
             img.width,
             img.height
           );
-          // var toUpload = canvas1.toDataURL("image/png");
         }
-        //  context.drawImage(imageObj, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
       };
     }
   };
@@ -81,7 +89,6 @@ class CanvasComponent extends React.Component {
     body.style.cursor = "crosshair";
     this.updateCanvas();
 
-    // const keyUp$ = Rx.Observable.fromEvent(document, 'keyup').map(key=>key.key).subscribe(x=>console.log(x))
     const mouseDown$ = Rx.Observable.fromEvent(document, "mousedown");
     const mouseUp$ = Rx.Observable.fromEvent(document, "mouseup");
     const mouseMove$ = Rx.Observable.fromEvent(document, "mousemove");
@@ -133,7 +140,6 @@ class CanvasComponent extends React.Component {
 
   render() {
     const { x, y, width, height } = this.state.dragSelect;
-    console.log("canvasHeight", this.state.canvasHeight);
     return (
       <div>
         <canvas
@@ -171,28 +177,17 @@ class CanvasComponent extends React.Component {
 
 const Input = ({ label, value, handleChange }) => {
   return (
-    <span style={{ display: "flex", width: "50vw" }}>
-      <label>
-        {label}:{" "}
-      </label>
-      <input
-        style={{ width: "100%", marginLeft: "5px" }}
-        value={value}
-        onChange={handleChange}
-      />
-    </span>
-  );
-};
-const Textarea = ({ label, value, handleChange }) => {
-  return (
-    <textarea
-      style={{ width: "50vw" }}
-      name=""
-      id=""
-      rows="10"
-      placeholder={label}
+    <TextField
+      id="textarea"
       value={value}
       onChange={handleChange}
+      floatingLabelText={label}
+      floatingLabelFixed={true}
+      floatingLabelStyle={{ color: green400 }}
+      floatingLabelFocusStyle={{ color: green400 }}
+      underlineFocusStyle={{ borderColor: green400 }}
+      multiLine={true}
+      fullWidth={true}
     />
   );
 };
@@ -259,22 +254,21 @@ export default class Root extends Component {
       window.close();
     });
 
-    console.log(this.state.comment);
     firebase.database().ref("/snippets").push({
-      snippet: this.state.snippet,
-      imgPath: storagePath,
-      title: this.state.title,
-      url: this.state.url,
-      comment: this.state.comment,
-      created: moment().format("MMMM Do YYYY, h:mm:ss a"),
-      purpose: this.state.purpose,
-      project: this.state.project,
-      user: this.state.user
+      snippet: this.state.snippet || '',
+      imgPath: storagePath || '',
+      title: this.state.title || '',
+      url: this.state.url || '',
+      comment: this.state.comment || '',
+      created: moment().format("MMMM Do YYYY, h:mm:ss a")  || '',
+      purpose: this.state.purpose || '',
+      project: this.state.project || '',
+      user: this.state.user  || ''
     });
   }
 
   handleChange = (e, key) => {
-    console.log(e.nativeEvent.srcElement.value, key)
+    console.log(e.nativeEvent.srcElement.value, key);
     this.setState({ [key]: e.nativeEvent.srcElement.value });
   };
 
@@ -286,36 +280,38 @@ export default class Root extends Component {
           ref={component => (this.canvasComp = component)}
           img={this.state.img}
         />
-        {_.map(["user", "project", "purpose", "title", "url"], key => {
-          return (
-            <Input
-              key={key}
-              label={key}
-              value={this.state[key] || ""}
-              handleChange={e => this.handleChange(e, key)}
-            />
-          );
-        })}
-        {_.map(["comment", "snippet"], key => {
-          return (
-            <Textarea
-              key={key}
-              label={key}
-              value={this.state[key] || ""}
-              handleChange={e => this.handleChange(e, key)}
-            />
-          );
-        })}
-        <br />
-        <button onClick={e => this.handleSubmit(e)}>Submit</button>{" "}
+        <div style={{width:'50vw'}}>
+          {_.map(
+            [
+              "user",
+              "project",
+              "purpose",
+              "title",
+              "url",
+              "comment",
+              "snippet"
+            ],
+            key => {
+              return (
+                <Input
+                  key={key}
+                  label={key}
+                  value={this.state[key] || ""}
+                  handleChange={e => this.handleChange(e, key)}
+                />
+              );
+            }
+          )}
+        </div>
+        <RaisedButton
+          backgroundColor={green400}
+          onClick={e => this.handleSubmit(e)}
+        >
+          Submit
+        </RaisedButton>{" "}
         {this.state.uploading &&
           <span>Uploading image. Will auto close when finished.</span>}
       </div>
     );
   }
-}
-{
-  /*<Provider store={store}>
-  <App />
-</Provider>*/
 }

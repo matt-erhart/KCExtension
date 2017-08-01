@@ -105,7 +105,7 @@ class App extends React.Component {
             backgroundColor={blue500}
             onClick={e => {
               if (this.state.feedback)
-                dbRef.child("feedback").push({feedback: this.state.feedback, from: 'chrome_ext', user: this.state.user || '', created: Date.now().toString()});
+                dbRef.child("feedback").push({feedback: this.state.feedback, user: this.state.user || '', created: Date.now().toString()});
               this.setState({ feedback: "", feedbackSent: true });
             }}
             fullWidth={true}
@@ -128,8 +128,3 @@ chrome.storage.local.get("state", obj => {
     document.querySelector("#root")
   );
 });
-
-// const { state } = obj;
-// const initialState = JSON.parse(state || '{}');
-// const createStore = require('../../app/store/configureStore');
-// <Root store={createStore(initialState)} />

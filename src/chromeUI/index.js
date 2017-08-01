@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import injectTapEventPlugin from "react-tap-event-plugin";
+injectTapEventPlugin();
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 chrome.storage.local.get('state', (obj) => {
   ReactDOM.render(
-    <App/>,
+    <MuiThemeProvider><App/></MuiThemeProvider>,
     document.querySelector('#root')
   );
 });

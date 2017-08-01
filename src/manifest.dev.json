@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0",
+  "version": "0.0.5",
   "name": "Knowledge Collector",
   "manifest_version": 2,
   "description": "To collect snippets with cropped screenshots and and selected text",
