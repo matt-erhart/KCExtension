@@ -51,18 +51,22 @@ class CanvasComponent extends React.Component {
     };
   }
   updateCanvas = () => {
+    const pixRatio = window.devicePixelRatio || 1;
     const ctx = this.refs.canvas.getContext("2d");
     if (this.props.img !== undefined) {
       var img = new Image();
       img.src = this.props.img;
+      
       img.onload = () => {
+        const imgH = Math.round(img.height / pixRatio);
+      const imgW = Math.round(img.width / pixRatio);
         if (this.state.canvasHeight === 1)
-          this.setState({ canvasHeight: img.height, canvasWidth: img.width });
+          this.setState({ canvasHeight: imgH, canvasWidth: imgW });
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         if (this.state.crop && this.state.dragSelect.x !== null) {
           const { x, y, width, height } = this.state.dragSelect;
-          var hRatio = ctx.canvas.width / img.width;
-          var vRatio = ctx.canvas.height / img.height;
+          var hRatio = ctx.canvas.width / imgW;
+          var vRatio = ctx.canvas.height / imgH;
           var ratio = Math.min(hRatio, vRatio);
           ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
         }
@@ -71,12 +75,12 @@ class CanvasComponent extends React.Component {
             img,
             0,
             0,
-            img.width,
-            img.height,
+            imgW,
+            imgH,
             0,
             0,
-            img.width,
-            img.height
+            imgW,
+            imgH
           );
         }
       };
@@ -255,15 +259,15 @@ export default class Root extends Component {
     });
 
     firebase.database().ref("/snippets").push({
-      snippet: this.state.snippet || '',
-      imgPath: storagePath || '',
-      title: this.state.title || '',
-      url: this.state.url || '',
-      comment: this.state.comment || '',
-      created: moment().format("MMMM Do YYYY, h:mm:ss a")  || '',
-      purpose: this.state.purpose || '',
-      project: this.state.project || '',
-      user: this.state.user  || ''
+      snippet: this.state.snippet || "",
+      imgPath: storagePath || "",
+      title: this.state.title || "",
+      url: this.state.url || "",
+      comment: this.state.comment || "",
+      created: moment().format("MMMM Do YYYY, h:mm:ss a") || "",
+      purpose: this.state.purpose || "",
+      project: this.state.project || "",
+      user: this.state.user || ""
     });
   }
 
@@ -280,7 +284,7 @@ export default class Root extends Component {
           ref={component => (this.canvasComp = component)}
           img={this.state.img}
         />
-        <div style={{width:'50vw'}}>
+        <div style={{ width: "50vw" }}>
           {_.map(
             [
               "user",
