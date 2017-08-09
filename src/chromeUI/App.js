@@ -65,18 +65,23 @@ class CanvasComponent extends React.Component {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         if (this.state.crop && this.state.dragSelect.x !== null) {
           const { x, y, width, height } = this.state.dragSelect;
+          const w = Math.round(width * pixRatio);
+          const h = Math.round(height * pixRatio);
+          const xr = Math.round(x * pixRatio);
+          const yr = Math.round(y * pixRatio);
+
           var hRatio = ctx.canvas.width / imgW;
           var vRatio = ctx.canvas.height / imgH;
           var ratio = Math.min(hRatio, vRatio);
-          ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+          ctx.drawImage(img, xr, yr, w, h, 0, 0, width, height);
         }
         if (!this.state.crop) {
           ctx.drawImage(
             img,
             0,
             0,
-            imgW,
-            imgH,
+            img.width,
+            img.height,
             0,
             0,
             imgW,
